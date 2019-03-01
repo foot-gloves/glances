@@ -30,6 +30,7 @@ from glances.plugins.glances_plugin import GlancesPlugin
 # Import plugin specific dependency
 try:
     import netifaces
+    from netaddr import IPAddress
 except ImportError as e:
     import_error_tag = True
     logger.warning("Missing Python Lib ({}), IP plugin is disabled".format(e))
@@ -147,8 +148,7 @@ class Plugin(GlancesPlugin):
 
         Example: '255.255.255.0' will return 24
         """
-        return sum([int(x) << 8 for x in ip.split('.')]) // 8128
-
+        return IPAddress(ip).netmask_bits()
 
 class PublicIpAddress(object):
     """Get public IP address from online services."""
